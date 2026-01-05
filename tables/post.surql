@@ -45,8 +45,8 @@ We use some cool js & react-query magic here to make it work flawlessly. Check i
 DEFINE TABLE post SCHEMAFULL
     PERMISSIONS 
         FOR select FULL
-        FOR create WHERE $scope = 'user'
-        FOR update, delete WHERE $scope = 'user' && author = $auth.id;
+        FOR create WHERE $access = 'user'
+        FOR update, delete WHERE $access = 'user' && author = $auth.id;
 
 DEFINE FIELD title   ON TABLE post TYPE string;
 DEFINE FIELD body    ON TABLE post TYPE string;

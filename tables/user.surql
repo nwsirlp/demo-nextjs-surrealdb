@@ -2,18 +2,29 @@ DEFINE TABLE user SCHEMAFULL
     PERMISSIONS 
         FOR select FULL
         FOR create NONE
-        FOR update, delete WHERE $scope = 'user' && id = $auth.id;
+        FOR update, delete WHERE $access = 'user' && id = $auth.id;
 
-DEFINE SCOPE user 
-    SIGNUP ( CREATE user SET name = $name, username = $username, password = crypto::argon2::generate($password) )
-    SIGNIN ( SELECT * FROM user WHERE username = $username AND crypto::argon2::compare(password, $password));
+-- Define access method for user authentication (SurrealDB 2.x syntax)
+DEFINE ACCESS user ON DATABASE TYPE RECORD
+    SIGNUP (
+        CREATE user SET 
+            name = $name, 
+            username = $username, 
+            password = crypto::argon2::generate($password)
+    )
+    SIGNIN (
+        SELECT * FROM user 
+        WHERE username = $username 
+        AND crypto::argon2::compare(password, $password)
+    )
+    DURATION FOR SESSION 7d;
 
 DEFINE FIELD name       ON TABLE user TYPE string;
 DEFINE FIELD username   ON TABLE user TYPE string;
 DEFINE FIELD password   ON TABLE user TYPE string
     PERMISSIONS 
         FOR select NONE
-        FOR update, delete WHERE $scope = 'user' && id = $auth.id;
+        FOR update, delete WHERE $access = 'user' && id = $auth.id;
 
 DEFINE FIELD created    ON TABLE user VALUE $before OR time::now();
 DEFINE FIELD updated    ON TABLE user VALUE time::now();
