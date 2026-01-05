@@ -32,7 +32,7 @@ export default function Home() {
                                 post={post}
                                 key={post.id}
                                 onRemoved={() => refetch()}
-                                showAuthorTools={post.author.id === user?.id}
+                                showAuthorTools={post.author?.id === user?.id}
                             />
                         ))}
                     </div>

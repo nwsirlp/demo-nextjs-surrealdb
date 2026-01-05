@@ -1,8 +1,26 @@
+-----------------------------
+----- Table definitions -----
+-----------------------------
+
+-- Define table FIRST before demo content
+DEFINE TABLE post SCHEMAFULL
+    PERMISSIONS 
+        FOR select FULL
+        FOR create WHERE $auth != NONE
+        FOR update, delete WHERE $auth != NONE && author = $auth.id;
+
+DEFINE FIELD title   ON TABLE post TYPE string;
+DEFINE FIELD body    ON TABLE post TYPE string;
+DEFINE FIELD author  ON TABLE post TYPE option<record<user>> VALUE $value OR $before OR $auth.id;
+DEFINE FIELD created ON TABLE post VALUE $before OR time::now();
+DEFINE FIELD updated ON TABLE post VALUE time::now();
+
 ------------------------
 ----- Demo Content -----
 ------------------------
 
--- We need to add the demo content before the field definitions, otherwise we cannot assign the precreated authors
+-- We need to add the demo content after the field definitions
+-- Note: Demo posts must be created with root access since they reference pre-created users
 
 CREATE post CONTENT {
     title: "SurrealDB is awesome!",
@@ -37,20 +55,3 @@ We use some cool js & react-query magic here to make it work flawlessly. Check i
     created: time::now(),
     updated: time::now()
 };
-
------------------------------
------ Table definitions -----
------------------------------
-
-DEFINE TABLE post SCHEMAFULL
-    PERMISSIONS 
-        FOR select FULL
-        FOR create WHERE $access = 'user'
-        FOR update, delete WHERE $access = 'user' && author = $auth.id;
-
-DEFINE FIELD title   ON TABLE post TYPE string;
-DEFINE FIELD body    ON TABLE post TYPE string;
-DEFINE FIELD author  ON TABLE post VALUE $before OR $auth.id;
-DEFINE FIELD created ON TABLE post VALUE $before OR time::now();
-DEFINE FIELD updated ON TABLE post VALUE time::now();
-
