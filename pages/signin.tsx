@@ -12,12 +12,12 @@ export default function Signin() {
     const { data: user } = useAuthenticatedUser();
     const { register, handleSubmit } = useForm<SigninDetails>();
     const { isLoading, mutate } = useSurrealSignin({
-        onSuccess: () => router.push('/'),
+        onSuccess: () => router.push('/employees'),
         onFailure: () => alert('Failed!'),
     });
 
     useEffect(() => {
-        if (user) router.push('/');
+        if (user) router.push('/employees');
     }, [user, router]);
 
     return (

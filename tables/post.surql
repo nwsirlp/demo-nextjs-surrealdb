@@ -6,8 +6,7 @@
 DEFINE TABLE post SCHEMAFULL
     PERMISSIONS 
         FOR select FULL
-        FOR create WHERE $auth != NONE
-        FOR update, delete WHERE $auth != NONE && author = $auth.id;
+        FOR create, update, delete WHERE $auth != NONE;
 
 DEFINE FIELD title   ON TABLE post TYPE string;
 DEFINE FIELD body    ON TABLE post TYPE string;

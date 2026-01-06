@@ -50,7 +50,7 @@ export function useAuthenticatedUser() {
         queryFn: async (): Promise<User | null> => {
             try {
                 const result = await surreal.query<[User[]]>(
-                    `SELECT * FROM user WHERE id = $auth.id`
+                    `SELECT * FROM user WHERE $auth != NONE AND id = $auth.id`
                 );
                 const data = extractQueryResult<User>(result);
                 return data.map(processUserRecord).find((a) => !!a) ?? null;

@@ -18,7 +18,7 @@ export const getSurrealInstance = async (): Promise<Surreal> => {
         await surrealInstance.connect(SurrealEndpoint);
         await surrealInstance.use({ namespace: SurrealNamespace, database: SurrealDatabase });
         
-        // Restore session from localStorage if available
+        // Restore user session from localStorage if available
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem('usersession');
             if (token) {

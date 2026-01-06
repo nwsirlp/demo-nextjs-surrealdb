@@ -1,43 +1,19 @@
-import React from 'react';
-import RenderPost from '../components/RenderPost';
-import { useAuthenticatedUser, usePosts } from '../constants/Queries';
-import { type User } from '../constants/Types';
-import Head from '../components/Head';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-    const { isLoading, error, data, refetch } = usePosts<User>({
-        fetchAuthor: true,
-    });
-
-    const { data: user } = useAuthenticatedUser();
-    const message = isLoading
-        ? 'Loading posts...'
-        : error
-        ? 'Failed to load posts'
-        : data?.length == 0
-        ? 'No posts available, create one!'
-        : undefined;
-
+    const router = useRouter();
+    
+    useEffect(() => {
+        router.replace('/employees');
+    }, [router]);
+    
     return (
-        <>
-            <Head title="Posts" />
-            <div className="mt-48 mx-8">
-                <h2 className="font-bold mt-4 mb-12 text-5xl">Posts</h2>
-                {message ? (
-                    <p>{message}</p>
-                ) : (
-                    <div className="flex flex-col gap-12">
-                        {data?.map((post) => (
-                            <RenderPost
-                                post={post}
-                                key={post.id}
-                                onRemoved={() => refetch()}
-                                showAuthorTools={post.author?.id === user?.id}
-                            />
-                        ))}
-                    </div>
-                )}
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-10 h-10 border-4 border-slate-200 border-t-indigo-600 rounded-full animate-spin" />
+                <p className="text-slate-600">Redirecting...</p>
             </div>
-        </>
+        </div>
     );
 }
